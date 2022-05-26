@@ -1,7 +1,7 @@
 try {
   // Set a property in each of the three property stores.
   const scriptProperties = PropertiesService.getScriptProperties();
-  // const userProperties = PropertiesService.getUserProperties();
+  const userProperties = PropertiesService.getUserProperties();
   // const documentProperties = PropertiesService.getDocumentProperties();
 
   scriptProperties.setProperty('SERVER_URL', "https://be-cdms.dev.ftech.ai/get_dummy_nlg");
