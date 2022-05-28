@@ -1,3 +1,3 @@
 function myFunction() {
-  console.log('testing')
+  console.log('testing pull and push')
 }
