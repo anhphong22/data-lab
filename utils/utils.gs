@@ -8,7 +8,12 @@ const utils = class Utils{
   // function to get sheet by name
   getSheetbyName(name){
     var sheet = SHEET.getSheetByName(name);
-    return sheet;
+    if (sheet != null){
+      return sheet;
+    }else{
+      Logger.log(`The ${name} spreadsheet was not found`)
+    }
+    
   }
 
   // function to get cell range
@@ -28,7 +33,7 @@ const utils = class Utils{
 
   // function to get header list
   getData(name, rIndex, cIndex, rIndexOffset=1,cIndexOffset, header){
-    var data = getSheetByName(name).getRange(rIndex, cIndex, rIndexOffset, cIndexOffset).getValues();
+    var data = this.getSheetbyName(name).getRange(rIndex, cIndex, rIndexOffset, cIndexOffset).getValues();
     if (header == 'header'){
       return data[0];
     } else{

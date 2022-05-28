@@ -4,5 +4,6 @@ function test(){
   // var simp = new si;
   // simp.createSheet();
   // fetchNlgTemplate()
-  console.log(utils.prototype.getSheetbyName('NLG_chemistry').getName())
+  // console.log(fetchNlgTemplate())
+  console.log(utils.prototype.getSheetbyName('NLG_name'))
 }
