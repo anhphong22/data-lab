@@ -1,3 +1,3 @@
-function myFunction() {
-  console.log('passed')
+function test(){
+  console.log(SHEET.getName())
 }
