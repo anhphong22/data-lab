@@ -12,6 +12,10 @@ const si = class SheetImport{
     
     var db_skill_name = utils.prototype.getCurrentSkillName();
     if (db_skill_name.indexOf(name) == -1){
+      
+      // archive current sheets
+      utils.prototype.archiveSheet();
+
       // create domain sheet
       var ds = SHEET.insertSheet().setName(name);
       this.createOnHeader(name, headerProperties.data);
