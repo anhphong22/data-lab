@@ -13,14 +13,24 @@ function fetchNlgTemplate(){
   for (var i = 0; i < system_intents.length; i++){
     var temp = {}
     temp[`${system_intents[i]}`] = JSON.parse(response).templates[`${system_intents[i]}`];
-    // var message = {}
-    // message[`${system_intents[i]}`] = json2yaml(temp)
 
     // fill in data to dummy database
     var dbSheet = utils.prototype.getSheetbyName('NLG_chemistry'),
-        header = utils.prototype.getData('NLG_chemistry', 1, 1, 1, 3, 'header')
-    // dbSheet.getRange(i+2, utils.prototype.getColumnIndexbyName())
-    console.log(header)
+        header = utils.prototype.getData('NLG_chemistry', 1, 1, 1, 3, 'header');
+    
+    dbSheet.getRange(i+2, utils.prototype.getColumnIndexbyName(header, 'no'))
+           .setValue(i+1)
+           .setVerticalAlignment('top')
+           .setHorizontalAlignment('left');
+    
+    dbSheet.getRange(i+2, utils.prototype.getColumnIndexbyName(header, 'system intent'))
+           .setValue(system_intents[i])
+           .setVerticalAlignment('top')
+           .setHorizontalAlignment('left');
+
+    dbSheet.getRange(i+2, utils.prototype.getColumnIndexbyName(header, 'messages'))
+           .setValue(json2yaml(temp));
+    SHEET.autoResizeColumn(utils.prototype.getColumnIndexbyName(header, 'messages'))
 
   }
 
