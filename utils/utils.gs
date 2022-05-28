@@ -50,10 +50,10 @@ const utils = class Utils{
   archiveSheet(){
     var sheets = SHEET.getSheets();
     for (var i=0; i < sheets.length; i++){
-      if (sheets[i].getName() != 'Sheet1'){
         sheets[i].hideSheet()
-      }
     }
+
+    Logger.log(`Archived ${sheets.length} sheets`)
   }
 
   // function to get sheet names in Spreadsheet

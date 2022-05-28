@@ -23,9 +23,12 @@ const si = class SheetImport{
       // create nlg sheet
       var nlg = SHEET.insertSheet().setName(`NLG_${name}`)
       this.createOnHeader(`NLG_${name}`, headerProperties.nlg)
+      
+      Logger.log('Skill sheet created successfully!')
+
     } else{
         var error_response = display.prototype.showAlert('Skill name already exists',
-                                                          'Do you want to set another name',
+                                                          'Do you want to set another name?',
                                                           ui.ButtonSet.OK_CANCEL);
         if (error_response ==  true){
           si.prototype.createSheet()

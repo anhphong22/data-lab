@@ -1,3 +1,6 @@
 function test(){
-  console.log(SHEET.getName())
+  // test create a sheet
+
+  var simp = new si;
+  simp.createSheet();
 }
