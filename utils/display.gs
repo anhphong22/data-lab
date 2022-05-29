@@ -19,3 +19,4 @@ const display = class Display{
   }
   
 }
+

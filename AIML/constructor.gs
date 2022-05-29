@@ -33,9 +33,9 @@ const acon = class AIMLConstructor{
       category.addContent(template)
     // root.addContent(category)
 
-    let document = XmlService.createDocument(category);
-    let user_ask = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
-    return user_ask;
+    // let document = XmlService.createDocument(category);
+    // let user_ask = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
+    return category;
   }
 
   answerSchemas(nlg, _pattern){
