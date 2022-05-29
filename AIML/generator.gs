@@ -23,21 +23,29 @@ const agen = class AIMLGenerator{
 
   generateAIML(){
     // process multiple lines in cell and return a 1D array.
-    var questions = utils.prototype.getSheetbyName('chemistry').getRange(2,12, 1, 1).getValues();
-    var questions = process.prototype.processMultiplelines(questions);
-    var questions = utils.prototype.flattenArray(questions);
+    var patterns = utils.prototype.getSheetbyName('chemistry').getRange(2,12, 1, 1).getValues();
+    var patterns = process.prototype.processMultiplelines(patterns);
+    var patterns = utils.prototype.flattenArray(patterns);
 
     // generate AIML file
     let root = XmlService.createElement('aiml');
         root.setAttribute('version', '2.0');
       
-      questions.forEach(question =>{
-        var _pattern = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
-        var item = acon.prototype.questionSchemas(question,_pattern);
+      patterns.forEach(_pattern =>{
+        var _template = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
+        var item = acon.prototype.questionSchemas(_template,_pattern);
 
         root.addContent(item)
       }
+      
       )
+
+      // create answer respectively
+      var nlg = utils.prototype.getSheetbyName('chemistry').getRange('I2').getValue();
+      var _pattern = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue()
+      let answer = acon.prototype.answerSchemas(nlg, _pattern);
+
+      root.addContent(answer)
     
     let document = XmlService.createDocument(root);
     let aiml = XmlService.getPrettyFormat().format(document);

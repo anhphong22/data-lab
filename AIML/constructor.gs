@@ -19,7 +19,7 @@ const acon = class AIMLConstructor{
 
   }
 
-  questionSchemas(question, _pattern){
+  questionSchemas(_template, _pattern){
   // let root = XmlService.createElement('aiml');
   //     root.setAttribute('version', '2.0');
     let category = XmlService.createElement('category')
@@ -27,7 +27,7 @@ const acon = class AIMLConstructor{
           pattern.setText(_pattern)
       let template = XmlService.createElement('template')
         let srai = XmlService.createElement('srai')
-            srai.setText(question)
+            srai.setText(_template)
       template.addContent(srai)
       category.addContent(pattern)
       category.addContent(template)
@@ -47,9 +47,9 @@ const acon = class AIMLConstructor{
     category.addContent(pattern)
     category.addContent(template)
 
-    let document = XmlService.createDocument(category);
-    let answer = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
-    return answer;
+    // let document = XmlService.createDocument(category);
+    // let answer = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
+    return category;
           
   }
 
