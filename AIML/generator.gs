@@ -14,7 +14,7 @@
 
 // TODO construct an aiml that can be imported to COMET Core
 
-const agen = class AIMLGenerator{
+const acon = class AIMLConstructor{
   constructor(){
 
   }
@@ -38,15 +38,7 @@ const agen = class AIMLGenerator{
     return user_ask;
   }
 
-  metaSchemas(response, url){
-
-    // schemas for image response
-
-
-  }
-
-  multiPlainTextSchemas(message_list, _pattern){
-
+  mulPlainTextSchemas(message_list, _pattern){
     // schemas for multiple plain text
     let category = XmlService.createElement('category');
       let pattern = XmlService.createElement('pattern');
@@ -64,70 +56,158 @@ const agen = class AIMLGenerator{
     
     let document = XmlService.createDocument(category);
     let system_response = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
-    return system_response;        
-                  
+    return system_response;                  
   }
 
-  
+  singleImageSchemas(url, _pattern){
+    /*
+      <category>
+          <pattern>XTEST SEND SINGLE IMAGE</pattern>
+          <template><image>https://chatilly.com/images/cta01.jpg</image></template>
+      </category>
+    */
 
+  }
 
+  mulImageSchemas(urls, _pattern){
+    /*
+      <category>
+        <pattern>XTEST MULTI IMAGES</pattern>
+        <template>
+            <image>
+                <li>https://chatilly.com/images/cta01.jpg</li>
+                <li>https://chatilly.com/images/cta02.jpg</li>
+            </image>
+        </template>
+      </category>
+    */
 
+  }
+
+  singleSlotSchemas(nlg, slot, _pattern){
+    /*
+      <category>
+        <pattern>XTEST_SLOT MY NAME IS ^</pattern>
+        <template>
+            <li>/utter_name_of_user</li>
+            <li><slots><slot>name</slot><value><star/></value></slots></li>
+        </template>
+      </category>
+    */
+
+  }
+
+  mulSlotSchemas(nlg, slots, _pattern){
+    /*
+      <category>
+        <pattern>XTEST_SLOTS MY NAME IS ^</pattern>
+        <template>
+            <li>/utter_name_of_user</li>
+            <li>
+                <slots>
+                    <li><slot>name</slot><value><star/></value></li>
+                </slots>
+            </li>
+
+        </template>
+      </category>
+    */
+
+  }
+
+  singleVideoSchemas(url, _pattern){
+    /*
+      <category>
+        <pattern>XTEST SINGLE VIDEO</pattern>
+        <template><video>http://www.w3schools.com/tags/movie.mp4</video></template>
+      </category>
+    */
+
+  }
+
+  mulVideoSchemas(urls, _pattern){
+    /*
+      <category>
+        <pattern>XTEST MULTI VIDEOS</pattern>
+        <template>
+            <video>
+                <li>https://www.w3schools.com/tags/movie.mp4</li>
+                <li>https://www.w3schools.com/tags/movie.mp4</li>
+            </video>
+        </template>
+      </category>
+    */
+
+  }
+
+  urlSchemas(url, title, _pattern){
+    /*
+      <category>
+        <pattern>XTEST SINGLE LINK</pattern>
+        <template><link><title>Servusai</title><url>http://www.google.com</url></link></template>
+      </category>
+    */
+
+  }
+
+  singleButtonSchemas(button, title, _pattern){
+    /*
+      <category>
+        <pattern>XTEST SINGLE SINGLE BUTTON</pattern>
+        <template>
+            <buttons><title>Servusai</title><postback>/general.greeting</postback></buttons>
+        </template>
+      </category>
+    */
+
+  }
+
+  mulButtonSchemas(button_list, _pattern){
+    // @param(button_list) 
+    /*
+      Example button_list = [
+        {"Servurai 1": "/general.greeting"},
+        {"Servurai 2": "/general.bye"}
+
+      ]
+    */
+
+    /*
+      <category>
+        <pattern>XTEST SINGLE MULTI BUTTONS</pattern>
+        <template>
+            <buttons>
+                <li><title>Servusai 1</title><postback>/general.greeting</postback></li>
+                <li><title>Servusai 2</title><postback>/general.bye</postback></li>
+            </buttons>
+        </template>
+      </category>
+    */
+    
+  }
+
+  mulMessagesSchemas(urls, image_url, message, _pattern){
+    /*
+      <category>
+        <pattern>XTEST MULTI MESSAGES</pattern>
+        <template>
+            <li>Hello, this is the first message</li>
+            <li><image>https://chatilly.com/images/cta01.jpg</image></li>
+            <li>
+                <video>
+                    <li>https://www.w3schools.com/tags/movie.mp4</li>
+                    <li>https://www.w3schools.com/tags/movie.mp4</li>
+                </video>
+            </li>
+        </template>
+      </category>
+    */
+
+  }
 
 }
 
 
-// <?xml version="1.0" encoding="UTF-8"?>
-// <aiml version="2.0">
-//      <category>
-//         <pattern>XTEST SEND MULTI PLAIN TEXT FOR RANDOMLY PICK</pattern>
-//         <template>
-//             <random>
-//                 <li>Message 1</li>
-//                 <li>Message 2</li>
-//                 <li>Message 3</li>
-//             </random>
-//         </template>
-//     </category>
-// </aiml>
-
-
-
-
-// Log the title and labels for the first page of blog posts on
-// Google's The Keyword blog.
-function parseXml() {
-  let url = 'https://blog.google/rss/';
-  let xml = UrlFetchApp.fetch(url).getContentText();
-  let document = XmlService.parse(xml);
-  let root = document.getRootElement();
-
-  let channel = root.getChild('channel');
-  let items = channel.getChildren('item');
-  items.forEach(item => {
-    let title = item.getChild('title').getText();
-    let categories = item.getChildren('category');
-    let labels = categories.map(category => category.getText());
-    console.log('%s (%s)', title, labels.join(', '));
-  });
-}
-
-// Create and log an XML representation of first 10 threads in your Gmail inbox.
-function createXml() {
-  let root = XmlService.createElement('aiml');
-  root.setAttribute('version', '2.0')
-  let threads = GmailApp.getInboxThreads()
-  threads = threads.slice(0,10); // Just the first 10
-  threads.forEach(thread => {
-    let child = XmlService.createElement('thread')
-        .setAttribute('messageCount', thread.getMessageCount())
-        .setAttribute('isUnread', thread.isUnread())
-        .setText(thread.getFirstMessageSubject());
-    root.addContent(child);
-  });
-  let document = XmlService.createDocument(root);
-  let xml = XmlService.getPrettyFormat().format(document);
-  console.log(xml);
-}
 
 
 
