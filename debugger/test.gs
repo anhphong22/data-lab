@@ -6,5 +6,5 @@ function test(){
   // fetchNlgTemplate()
   let question = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
   let response = utils.prototype.getSheetbyName('chemistry').getRange('I2').getValue();
-  console.log(agen.prototype.mulPlainTextSchemas(['Message 1', 'Message 2'], 'XTEST SEND MULTI PLAIN TEXT FOR RANDOMLY PICK'))
+  console.log(acon.prototype.answerSchemas(question, response))
 }

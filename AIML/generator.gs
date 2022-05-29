@@ -24,10 +24,10 @@ const acon = class AIMLConstructor{
   //     root.setAttribute('version', '2.0');
     let category = XmlService.createElement('category')
       let pattern = XmlService.createElement('pattern')
-          .setText(question)
+          pattern.setText(question)
       let template = XmlService.createElement('template')
         let srai = XmlService.createElement('srai')
-          .setText(response)
+            srai.setText(response)
       template.addContent(srai)
       category.addContent(pattern)
       category.addContent(template)
@@ -36,6 +36,21 @@ const acon = class AIMLConstructor{
     let document = XmlService.createDocument(category);
     let user_ask = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
     return user_ask;
+  }
+
+  answerSchemas(nlg, _pattern){
+    let category = XmlService.createElement('category')
+      let pattern = XmlService.createElement('pattern')
+          pattern.setText(_pattern);
+      let template = XmlService.createElement('template')
+          template.setText(nlg)
+    category.addContent(pattern)
+    category.addContent(template)
+
+    let document = XmlService.createDocument(category);
+    let answer = XmlService.getPrettyFormat().format(document).replace('<?xml version="1.0" encoding="UTF-8"?>', "").trim();
+    return answer;
+          
   }
 
   mulPlainTextSchemas(message_list, _pattern){
