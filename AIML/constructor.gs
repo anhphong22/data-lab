@@ -19,15 +19,15 @@ const acon = class AIMLConstructor{
 
   }
 
-  questionSchemas(question, response){
+  questionSchemas(question, _pattern){
   // let root = XmlService.createElement('aiml');
   //     root.setAttribute('version', '2.0');
     let category = XmlService.createElement('category')
       let pattern = XmlService.createElement('pattern')
-          pattern.setText(question)
+          pattern.setText(_pattern)
       let template = XmlService.createElement('template')
         let srai = XmlService.createElement('srai')
-            srai.setText(response)
+            srai.setText(question)
       template.addContent(srai)
       category.addContent(pattern)
       category.addContent(template)
@@ -219,6 +219,8 @@ const acon = class AIMLConstructor{
     */
 
   }
+
+  
 
 }
 
