@@ -21,7 +21,7 @@ const agen = class AIMLGenerator{
 
   }
 
-  generateAIML(range, ){
+  generateAIML(range){
     // process multiple lines in cell and return a 1D array.
     var patterns = utils.prototype.getSheetbyName('chemistry').getRange(range).getValues();
     var patterns = process.prototype.processMultiplelines(patterns);
@@ -32,7 +32,7 @@ const agen = class AIMLGenerator{
         root.setAttribute('version', '2.0');
       
       patterns.forEach(_pattern =>{
-        var _template = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
+        var _template = [];
         var item = acon.prototype.questionSchemas(_template,_pattern);
 
         root.addContent(item)
@@ -46,6 +46,14 @@ const agen = class AIMLGenerator{
       let answer = acon.prototype.answerSchemas(nlg, _pattern);
 
       root.addContent(answer)
+
+    var dataset = this.generateAIML();
+    var patterns = utils.prototype.flattenArray(dataset.aiml);
+
+    // generate AIML file
+    // let root = XmlService.createElement('aiml');
+    //     root.setAttribute('version', '2.0');
+
     
     let document = XmlService.createDocument(root);
     let aiml = XmlService.getPrettyFormat()
@@ -63,15 +71,34 @@ const agen = class AIMLGenerator{
     let sheet = utils.prototype.getSheetbyName('chemistry');
     let header = headerProperties.data;
     let lastRow = sheet.getLastRow();
-    let colIndex = utils.prototype.getColumnIndexbyName(data,'aiml')
+    let colIndex = utils.prototype.getColumnIndexbyName(header,'user intent');
+    let colres = utils.prototype.getColumnIndexbyName(header,'response');
+    let colaiml = utils.prototype.getColumnIndexbyName(header,'aiml');
+
 
     let data = sheet.getRange(2,colIndex, lastRow, 1).getValues();
-    console.log(data);
+        data = utils.prototype.flattenArray(data).slice(0, -1);
+
+    let dataset = [];
+
+    for (let i = 0; i < data.length; i++){
+      let item = {}
+      item.intent = data[i];
+      item.response = sheet.getRange(i+2,colres).getValue();
+      item.aiml = sheet.getRange(i+2, colaiml).getValues();
+
+      dataset.push(item)
+    }
+
+    return dataset;
 
   }
 
 }
 
-function main(){
-  agen.prototype.dataset()
+function main1(){
+  var t = agen.prototype.dataset();
+  for (let i = 0; i < t.length; i++){
+    console.log(t[i]['intent'])
+  }
 }

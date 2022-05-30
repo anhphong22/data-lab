@@ -14,7 +14,7 @@
 
 // TODO construct an aiml that can be imported to COMET Core
 
-const acon = class AIMLConstructor{
+const schemas = class Schemas{
   constructor(){
 
   }
