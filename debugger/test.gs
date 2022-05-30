@@ -11,5 +11,9 @@ function test(){
   // console.log(agen.prototype.generateAIML())
 
   // console.log(utils.prototype.getCellRange())
+
+  // var api = 'http://google.com/complete/search?q=so+khoi&output=toolbar'
+  var result = UrlFetchApp.fetch(api);
+  console.log(result.toString())
   
 }
