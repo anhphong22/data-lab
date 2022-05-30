@@ -16,31 +16,87 @@ const aufi = class AutoFill{
 
   // init 
   constructor(){
-
+    
   }
 
   fillUserIntent(range, pair_mapping){
-    // var range = utils.prototype.getCellRange();
+    let sheet = utils.prototype.getSheetbyName;
+    let cIndex = utils.prototype.getColumnIndexbyName;
+    let current_col = SHEET.getRange(range).getColumn();
+    let header = headerProperties.data;
+
+    let start = parseInt(SHEET.getRange(range).getRowIndex());
+    let end = SHEET.getRange(range).getNumRows();
+    
     let adj = SHEET.getRange(range).getValues();
         adj = utils.prototype.flattenArray(adj);
     
-    let cIndex = utils.prototype.getColumnIndexbyName(headerProperties.data, 'user intent');
     
-    for (let i=0; i < adj.length; i++){
-      let user_intent = adj[i].toString().slice(adj[i].indexOf('.') + 1);
-      let quesword = user_intent.substring(0, user_intent.indexOf('_'));
-      user_intent = `/utter_${user_intent.replace(quesword,pair_mapping[`${quesword}`])}`;
-      utils.prototype.getSheetbyName('chemistry').getRange(i+2, cIndex).setValue(user_intent);
+    if (sheet('chemistry').getRange(1, current_col).getValue().toString().toLowerCase().trim('') == 'adj'){
+      for (let i=0; i < adj.length; i++){
+        let m = i + start;
+        let user_intent = adj[i].toString().slice(adj[i].indexOf('.') + 1);
+        let quesword = user_intent.substring(0, user_intent.indexOf('_'));
+        let response = `/utter_${user_intent.replace(quesword,pair_mapping[`${quesword}`])}`;
+        sheet('chemistry').getRange(m, cIndex(header, 'user intent')).setValue(user_intent)
+        sheet('chemistry').getRange(m, cIndex(header, 'response')).setValue(response);
+      }
+  
+    }else{
+      Logger.log('You should select cell ranges in adj')
     }
-  
   }
-  
-}
 
+  fillAIML(range, intent){
+    let sheet = utils.prototype.getSheetbyName;
+    let cIndex = utils.prototype.getColumnIndexbyName;
+    let header = headerProperties.data;
+
+    let start = parseInt(SHEET.getRange(range).getRowIndex());
+    let end = SHEET.getRange(range).getNumRows();
+
+    let user_intent = sheet('chemistry').getRange(start, cIndex(header, 'user intent'), end, 1).getValues();
+        user_intent = utils.prototype.flattenArray(user_intent);
+    
+    let intent_db = sheet('AIML_chemistry').getRange(2, 2, sheet('AIML_chemistry').getLastRow(),1).getValues();
+        intent_db = utils.prototype.flattenArray(intent_db);
+    
+
+    for (let i=0; i < user_intent.length; i++){
+      let m = i + start;
+      let intent = user_intent[i].split('.')[0].toString();
+    
+      // query intent in AIML database to retrieve template correspondingly
+      if (intent_db.indexOf(intent) != -1){
+        let template = sheet('AIML_chemistry').getRange(intent_db.indexOf(intent)+2, 3).getValues();
+        let templates = process.prototype.processMultiplelines(template);
+
+        let object = sheet('chemistry').getRange(m, cIndex(header, 'object')).getValue();
+        let result = '';
+
+        for (let t in templates){
+          result += templates[t][0].replace(/{object}/gi, object) + '\n'
+        }
+
+        sheet('chemistry').getRange(m, cIndex(header, 'aiml')).setValue(result)
+       
+      }
+
+    }
+      
+  }
+
+}
+    
+  
 function main(){
   var pair_mapping = {
     ask: "ans"
   }
   var range = utils.prototype.getCellRange();
-  aufi.prototype.fillUserIntent(range, pair_mapping)
+  // aufi.prototype.fillUserIntent(range, pair_mapping)
+  // console.log(SHEET.getRange(range).getColumn())
+  aufi.prototype.fillAIML(range)
+  
+  
 }

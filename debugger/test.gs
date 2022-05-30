@@ -10,5 +10,6 @@ function test(){
 
   // console.log(agen.prototype.generateAIML())
 
-  console.log(utils.prototype.getCellRange())
+  // console.log(utils.prototype.getCellRange())
+  
 }

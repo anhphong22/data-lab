@@ -21,9 +21,9 @@ const agen = class AIMLGenerator{
 
   }
 
-  generateAIML(){
+  generateAIML(range, ){
     // process multiple lines in cell and return a 1D array.
-    var patterns = utils.prototype.getSheetbyName('chemistry').getRange(2,12, 1, 1).getValues();
+    var patterns = utils.prototype.getSheetbyName('chemistry').getRange(range).getValues();
     var patterns = process.prototype.processMultiplelines(patterns);
     var patterns = utils.prototype.flattenArray(patterns);
 
@@ -60,8 +60,18 @@ const agen = class AIMLGenerator{
 
   // get dataset to generate aiml file
   dataset(domain_name, skill_name){
-    
+    let sheet = utils.prototype.getSheetbyName('chemistry');
+    let header = headerProperties.data;
+    let lastRow = sheet.getLastRow();
+    let colIndex = utils.prototype.getColumnIndexbyName(data,'aiml')
+
+    let data = sheet.getRange(2,colIndex, lastRow, 1).getValues();
+    console.log(data);
 
   }
 
+}
+
+function main(){
+  agen.prototype.dataset()
 }
