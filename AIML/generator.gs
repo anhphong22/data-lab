@@ -21,40 +21,32 @@ const agen = class AIMLGenerator{
 
   }
 
-  generateAIML(range){
+  generateAIML(){
     // process multiple lines in cell and return a 1D array.
-    var patterns = utils.prototype.getSheetbyName('chemistry').getRange(range).getValues();
-    var patterns = process.prototype.processMultiplelines(patterns);
-    var patterns = utils.prototype.flattenArray(patterns);
+    var dataset = agen.prototype.dataset();
 
     // generate AIML file
     let root = XmlService.createElement('aiml');
         root.setAttribute('version', '2.0');
       
-      patterns.forEach(_pattern =>{
-        var _template = [];
-        var item = acon.prototype.questionSchemas(_template,_pattern);
+      for (let i = 0; i < dataset.length; i++){
+        var patterns = dataset[i]['aiml'];
+        patterns.forEach(_pattern =>{
+          var _template = dataset[i]['intent'];
+          var item = schemas.prototype.questionSchemas(_template,_pattern);
 
-        root.addContent(item)
-      }
+          root.addContent(item)
+        }
       
-      )
+        )
+        // create answer correspondingly
+        var nlg = dataset[i]['response'];
+        var _pattern = dataset[i]['intent'];
+        let answer = schemas.prototype.answerSchemas(nlg, _pattern);
 
-      // create answer respectively
-      var nlg = utils.prototype.getSheetbyName('chemistry').getRange('I2').getValue();
-      var _pattern = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
-      let answer = acon.prototype.answerSchemas(nlg, _pattern);
+        root.addContent(answer)
+      }
 
-      root.addContent(answer)
-
-    var dataset = this.generateAIML();
-    var patterns = utils.prototype.flattenArray(dataset.aiml);
-
-    // generate AIML file
-    // let root = XmlService.createElement('aiml');
-    //     root.setAttribute('version', '2.0');
-
-    
     let document = XmlService.createDocument(root);
     let aiml = XmlService.getPrettyFormat()
                          .setLineSeparator('\n')
@@ -85,7 +77,8 @@ const agen = class AIMLGenerator{
       let item = {}
       item.intent = data[i];
       item.response = sheet.getRange(i+2,colres).getValue();
-      item.aiml = sheet.getRange(i+2, colaiml).getValues();
+      item.aiml = utils.prototype.flattenArray(sheet.getRange(i+2, colaiml).getValues())
+                  .toString().split('\n').slice(0,-1);
 
       dataset.push(item)
     }
@@ -97,8 +90,8 @@ const agen = class AIMLGenerator{
 }
 
 function main1(){
-  var t = agen.prototype.dataset();
-  for (let i = 0; i < t.length; i++){
-    console.log(t[i]['intent'])
-  }
+  var dataset = agen.prototype.dataset();
+  console.log(agen.prototype.generateAIML())
 }
+
+
