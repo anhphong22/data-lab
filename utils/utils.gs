@@ -16,8 +16,13 @@ const utils = class Utils{
     
   }
 
-  // function to get cell range
-  getCellRange(rIndex, cIndex){
+  /**
+ * A function that gets the current selection, in A1Notation.
+ *
+ * @customfunction
+ */
+  getCellRange(){
+    return SHEET.getActiveRange().getA1Notation();
 
   }
 
@@ -44,11 +49,8 @@ const utils = class Utils{
 
   // function flatten 2D array to 1D one
   flattenArray(arr){
-    var flattened_arr = [] ;
-    for (var i = 0; i < arr.length - 1; i++) {
-      flattened_arr.push(arr[i][0]);
-    }
-    return flattened_arr;
+    Logger.log('Flatten successfullly!')
+    return arr = [].concat.apply([], arr);
   }
 
   // function to archive sheets
