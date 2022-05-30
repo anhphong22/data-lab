@@ -8,5 +8,7 @@ function test(){
   // let response = utils.prototype.getSheetbyName('chemistry').getRange('I2').getValue();
   // console.log(acon.prototype.answerSchemas(question, response))
 
-  console.log(agen.prototype.generateAIML())
+  // console.log(agen.prototype.generateAIML())
+
+  console.log(utils.prototype.getCellRange())
 }

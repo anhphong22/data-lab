@@ -42,18 +42,26 @@ const agen = class AIMLGenerator{
 
       // create answer respectively
       var nlg = utils.prototype.getSheetbyName('chemistry').getRange('I2').getValue();
-      var _pattern = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue()
+      var _pattern = utils.prototype.getSheetbyName('chemistry').getRange('G2').getValue();
       let answer = acon.prototype.answerSchemas(nlg, _pattern);
 
       root.addContent(answer)
     
     let document = XmlService.createDocument(root);
-    let aiml = XmlService.getPrettyFormat().format(document);
+    let aiml = XmlService.getPrettyFormat()
+                         .setLineSeparator('\n')
+                         .setEncoding('UTF-8')
+                         .format(document);
 
     // process escape characters in XML format
     return decodeXml(aiml);
 
   }
-  
+
+  // get dataset to generate aiml file
+  dataset(domain_name, skill_name){
+    
+
+  }
 
 }
