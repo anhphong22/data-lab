@@ -37,7 +37,7 @@ const aufi = class AutoFill{
         let m = i + start;
         let user_intent = adj[i].toString().slice(adj[i].indexOf('.') + 1);
         let quesword = user_intent.substring(0, user_intent.indexOf('_'));
-        let response = `/utter_${user_intent.replace(quesword,pair_mapping[`${quesword}`])}`;
+        let response = `/utter_res_${user_intent}`;
         sheet('chemistry').getRange(m, cIndex(header, 'user intent')).setValue(user_intent)
         sheet('chemistry').getRange(m, cIndex(header, 'response')).setValue(response);
       }
@@ -75,7 +75,10 @@ const aufi = class AutoFill{
         let result = '';
 
         for (let t in templates){
-          result += templates[t][0].replace(/{object}/gi, object) + '\n'
+          // result += templates[t][0].split('~[default_obj_full]').join(`@[${object}]`)+ '\n'
+          // console.log(result)
+          result += templates[t][0].replace(`%[${intent}]`,`%[${intent}.${object}]` ).replace('~[default_obj_full]', `@[${object}]`) + '\n'
+          // console.log(result)
         }
 
         sheet('chemistry').getRange(m, cIndex(header, 'aiml')).setValue(result)
@@ -94,7 +97,7 @@ function main(){
     ask: "ans"
   }
   var range = utils.prototype.getCellRange();
-  // aufi.prototype.fillUserIntent(range, pair_mapping)
+  aufi.prototype.fillUserIntent(range, pair_mapping)
   // console.log(SHEET.getRange(range).getColumn())
   aufi.prototype.fillAIML(range)
   

@@ -12,6 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// const ui = SpreadsheetApp.getUi();
-const SHEET = SpreadsheetApp.getActiveSpreadsheet();
+function getPlanning(url = 'https://docs.google.com/spreadsheets/d/19lYcTDckv-7zek0p7vICFixscPFaarMt9WbCSwAAPFA/edit#gid=1115838130'){
+  var SpreadSheet = SpreadsheetApp.openByUrl(url);
+  var projectName = SpreadSheet.getName();
 
+  var timelineSheet = SpreadSheet.getSheetByName('PRJ Timeline');
+
+  var projectName = projectName.substring(
+    projectName.indexOf("[") + 1, 
+    projectName.lastIndexOf("]")
+  );
+
+  console.log(timelineSheet.getRange(11,4).getValue().split(','))
+  
+
+
+  
+}

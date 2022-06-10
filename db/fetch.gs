@@ -1,3 +1,4 @@
+/** * @OnlyCurrentDoc */
 // Copyright 2022 NLP VA-Team
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +46,130 @@ function fetchNlgTemplate(){
     SHEET.autoResizeColumn(utils.prototype.getColumnIndexbyName(header, 'messages'))
 
   }
+}
 
 
+function onEdit(e){
+  var activateSheet = utils.prototype.getSheetbyName('prediction'),
+      header = utils.prototype.getData('prediction', 1, 1, 1, activateSheet.getLastColumn() , 'header');
+  var row = e.range.getRow()
+  var column_message = utils.prototype.getColumnIndexbyName(header,'message')
+  if (e.range.getColumn()===column_message){
+    if (activateSheet.getRange(row, column_message) != ''){
+      var column_predict = utils.prototype.getColumnIndexbyName(header,'respones_api')
+      var cell = activateSheet.getRange(row, column_predict)
+      cell.setFormula(`=predict(B${row})`);
+      var column_intent = utils.prototype.getColumnIndexbyName(header,'intent_predicted')
+      var cell = activateSheet.getRange(row, column_intent)
+      cell.setFormula(`=get_intent(D${row})`);
+      var column_entity = utils.prototype.getColumnIndexbyName(header,'entity_predicted')
+      var cell = activateSheet.getRange(row, column_entity)
+      cell.setFormula(`=get_entity(D${row})`);
+      var column_value = utils.prototype.getColumnIndexbyName(header,'value')
+      var cell = activateSheet.getRange(row, column_value)
+      cell.setFormula(`=get_text(D${row})`);
+
+      var column_value = utils.prototype.getColumnIndexbyName(header,'validated');
+      var cell = activateSheet.getRange(row, column_value)
+      cell.insertCheckboxes();
+      var column_value = utils.prototype.getColumnIndexbyName(header,'no');
+      var cell = activateSheet.getRange(row, column_value)
+      cell.setValue(row-1);
+    }
+
+    if (activateSheet.getRange(row, utils.prototype.getColumnIndexbyName(header,'value')) != ''){
+      highlight(row=row)
+    }
+  }
+}
+
+function get_intent(text){
+  if (text!=''){
+    text = JSON.parse(text)
+    return text[1].intent
+  }
+  else return ''
+}
+
+function get_entity(text){
+  if (text!=''){
+    text = JSON.parse(text)
+    entities = text[1].entities
+
+    console.log(text)
+    return entities[0].type
+  }
+  else return ''
+}
+
+function get_text(text){
+  if (text!=''){
+    text = JSON.parse(text)
+    entities = text[1].entities
+
+    console.log(text)
+    return entities[0].text
+  }
+  else return ''
+}
+
+function predict(text){
+  if (text!==''){
+    var payload = {
+          "sender_id": "default",
+          "text": text,
+          "context": {}
+        }
+
+    var options = {
+      'method' : 'post',
+      'contentType': 'application/json',
+      // Convert the JavaScript object to a JSON string.
+      'payload' : JSON.stringify(payload)
+    };
+
+    var response = UrlFetchApp.fetch('https://dry-plants-begin-118-69-70-245.loca.lt/api/parse', options)
+    var data = JSON.parse(response)
+  
+    return JSON.stringify(data)
+  }
+  else return ''
+}
+
+function get_matched_index(source,target){
+  var regex = new RegExp(`${source}`,'gm')
+  var current;
+  var matchIndexes = [];
+  while ((current = regex.exec(target)) != null)
+  {
+    matchIndexes.push(current.index);
+  }
+  console.log(matchIndexes)
+  return matchIndexes
+}
+
+function highlight(row=2){
+
+  var activesheet = utils.prototype.getSheetbyName('prediction')
+  var green = SpreadsheetApp.newTextStyle().setForegroundColor("#0000ff").build();
+  var source = activesheet.getRange(row,9).getValue()
+  var target = activesheet.getRange(row,2).getValue() 
+  var lst_index = get_matched_index(source = source,target=target)
+  var style = SpreadsheetApp
+                  .newRichTextValue()
+                  .setText(target)
+                  .setTextStyle(lst_index[0],target.length,SpreadsheetApp.newTextStyle().setForegroundColor("#000000").build())
+                  .build()
+  activesheet.getRange(row,2).setRichTextValues([
+                    [style],
+                ]);
+  var style = SpreadsheetApp
+                  .newRichTextValue()
+                  .setText(target)
+                  .setTextStyle(lst_index[0], lst_index[0]+ source.length,green)
+                  .build()
+  activesheet.getRange(row,2).setRichTextValues([
+                    [style],
+                ]);
+  console.log('done')
 }
